@@ -1,25 +1,12 @@
 <template>
   <div class="main">
-    <div class="main-head">
-      <img src="../assets/Index/home1.jpg" alt />
-    </div>
+    <div class="main-head"></div>
     <div class="main-mid">
-      <van-button type="primary" color="#ff004a" size="large" @click="pay()">立即支付</van-button>
-      <div class="main-mid-btnGroup">
-        <van-button type="primary" color="#03a9a5" @click="getShop()">参与门店</van-button>
-        <van-button @click="getOrder()" type="primary" color="#03a9a5">我的订单</van-button>
-      </div>
+      <img src="../assets/Index/main1.png" />
+      <img style="display:block;width:40%;margin:0 auto" src="../assets/Index/detail.png" />
+      <img style="display:block;width:50%;margin:0 auto" src="../assets/Index/pay.png" />
+      <img src="../assets/Index/main-help.png" />
     </div>
-    <div class="main-foot">
-      <img src="../assets/Index/home2.jpg" />
-      <img src="../assets/Index/pic1.jpg" />
-      <img src="../assets/Index/pic2.jpg" />
-      <img src="../assets/Index/pic3.jpg" />
-      <img src="../assets/Index/pic4.jpg" />
-      <img src="../assets/Index/pic5.jpg" />
-      <img src="../assets/Index/logo.jpg" />
-    </div>
-
     <!-- 登录开始 -->
     <transition name="bounce">
       <div class="toast" v-if="showMsgCode">
@@ -57,10 +44,22 @@
       </div>
     </transition>
     <!-- 登录结束 -->
+
+    <!-- 特权介绍开始 -->
+    <transition name="bounce">
+      <div class="toast" v-if="showPrivilege">
+        <van-row gutter="20">
+          <van-col span="8">span: 8</van-col>
+          <van-col span="8">span: 8</van-col>
+          <van-col span="8">span: 8</van-col>
+        </van-row>
+      </div>
+    </transition>
+    <!-- 特权介绍开始 -->
   </div>
 </template>
 <script>
-import { Button, Toast } from "vant";
+import { Button, Toast, Row, Col } from "vant";
 import { mobileCheck } from "../util/js/check";
 import { getCode } from "../util/js/getParam";
 import { getOsVersion } from "../util/js/device";
@@ -71,11 +70,14 @@ export default {
   name: "Index",
   components: {
     [Button.name]: Button,
-    [Toast.name]: Toast
+    [Toast.name]: Toast,
+    [Row.name]: Row,
+    [Col.name]: Col
   },
   data() {
     return {
-      showMsgCode: true, //是否显示验证码toast
+      showMsgCode: false, //是否显示验证码toast
+      showPrivilege: false, //显示特权
       mobile: "", //手机号
       msg: "", //验证码
       time: 60, //验证码倒计时
@@ -86,46 +88,46 @@ export default {
     };
   },
   created() {
-    this.clickFlag = this.$store.state.clickAble.clickFlag;
-    this.errMsg = this.$store.state.clickAble.clickMsg;
-    let parm = getCode(location.search);
-    if (!this.$store.state.login.islogin) {
-      this.$store.commit("login/updateShopCode", parm.shopCode);
-      Toast.loading({
-        mask: true,
-        duration: 0,
-        forbidClick: true,
-        message: "努力授权中..."
-      });
-      this.$api
-        .wxAuthLogin(parm.code, parm.shopCode, getOsVersion())
-        .then(result => {
-          if (result.data.errcode == "0") {
-            let login = {
-              os: getOsVersion(),
-              token: result.data.token,
-              openid: result.data.openid,
-              islogin: true
-            };
-            this.$store.commit("login/login", login);
-            if (result.data.purchased == "1") {
-              this.errMsg = result.data.errmsg;
-              this.clickFlag = false;
-            }
-            Toast.clear();
-          } else {
-            alert(result.data.errmsg);
-            this.errMsg = result.data.errmsg;
-            this.clickFlag = false;
-            Toast.clear();
-          }
-          let click = {
-            clickFlag: this.clickFlag,
-            clickMsg: this.errMsg
-          };
-          this.$store.commit("clickAble/updateShopCode", click);
-        });
-    }
+    // this.clickFlag = this.$store.state.clickAble.clickFlag;
+    // this.errMsg = this.$store.state.clickAble.clickMsg;
+    // let parm = getCode(location.search);
+    // if (!this.$store.state.login.islogin) {
+    //   this.$store.commit("login/updateShopCode", parm.shopCode);
+    //   Toast.loading({
+    //     mask: true,
+    //     duration: 0,
+    //     forbidClick: true,
+    //     message: "努力授权中..."
+    //   });
+    //   this.$api
+    //     .wxAuthLogin(parm.code, parm.shopCode, getOsVersion())
+    //     .then(result => {
+    //       if (result.data.errcode == "0") {
+    //         let login = {
+    //           os: getOsVersion(),
+    //           token: result.data.token,
+    //           openid: result.data.openid,
+    //           islogin: true
+    //         };
+    //         this.$store.commit("login/login", login);
+    //         if (result.data.purchased == "1") {
+    //           this.errMsg = result.data.errmsg;
+    //           this.clickFlag = false;
+    //         }
+    //         Toast.clear();
+    //       } else {
+    //         alert(result.data.errmsg);
+    //         this.errMsg = result.data.errmsg;
+    //         this.clickFlag = false;
+    //         Toast.clear();
+    //       }
+    //       let click = {
+    //         clickFlag: this.clickFlag,
+    //         clickMsg: this.errMsg
+    //       };
+    //       this.$store.commit("clickAble/updateShopCode", click);
+    //     });
+    // }
   },
   computed: {},
   methods: {
@@ -275,28 +277,27 @@ export default {
 <style lang="less" scoped>
 @import "../util/css/ModifyVantStyle/Button";
 @import "../util/css/toast/toast";
-@main-bgcolor: #851b29;
+@main-bgcolor: #98181f;
 .main {
   width: 100vw;
   min-height: 100vh;
   height: auto;
   background-color: @main-bgcolor;
+  background-image: url("../assets/Index/bg.png");
+  background-size: 100vw auto;
+  background-repeat: no-repeat;
+  .flex(column, space-around);
   &-head {
-    img {
-      width: 100%;
-      height: auto;
-    }
+    height: 30vw;
   }
   &-mid {
     width: 80vw;
+    height: 110vw;
+    border-radius: 3vw;
     margin: 0 auto;
-    padding: 4vw 0;
-    &-btnGroup {
-      margin-top: 7vw;
-      .flex(row, space-between);
-    }
-  }
-  &-foot {
+    overflow: hidden;
+    background: rgba(130, 0, 0, 0.6);
+    border: 1px solid #ffb400;
     img {
       width: 100%;
       height: auto;

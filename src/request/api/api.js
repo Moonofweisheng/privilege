@@ -3,7 +3,7 @@ import instance from '../http/http' //导入http中创建的axios实例
 import store from '../../store/index' //导入store
 import qs from 'qs'
 
-let url = base.he
+let url = base.pe
 
 const api = {
     /**
