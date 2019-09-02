@@ -3,8 +3,16 @@
     <div class="main-head"></div>
     <div class="main-mid">
       <img src="../assets/Index/main1.png" />
-      <img style="display:block;width:40%;margin:0 auto" src="../assets/Index/detail.png" />
-      <img style="display:block;width:50%;margin:0 auto" src="../assets/Index/pay.png" />
+      <img
+        @click="privilegeShow()"
+        style="display:block;width:40%;margin:0 auto;cursor:pointer"
+        src="../assets/Index/detail.png"
+      />
+      <img
+        @click="pay()"
+        style="display:block;width:50%;margin:1vw auto"
+        src="../assets/Index/pay.png"
+      />
       <img src="../assets/Index/main-help.png" />
     </div>
     <!-- 登录开始 -->
@@ -48,10 +56,38 @@
     <!-- 特权介绍开始 -->
     <transition name="bounce">
       <div class="toast" v-if="showPrivilege">
+        <img class="closeBtn" src="../assets/Index/col/close.png" @click="privilegeClose()" />
         <van-row gutter="20">
-          <van-col span="8">span: 8</van-col>
-          <van-col span="8">span: 8</van-col>
-          <van-col span="8">span: 8</van-col>
+          <van-col span="12" class="img-left">
+            <img src="../assets/Index/col/1.png" />
+          </van-col>
+          <van-col span="12" class="img-right">
+            <img src="../assets/Index/col/2.png" />
+          </van-col>
+          <van-col span="12" class="img-left">
+            <img src="../assets/Index/col/3.png" />
+          </van-col>
+          <van-col span="12" class="img-right">
+            <img src="../assets/Index/col/4.png" />
+          </van-col>
+          <van-col span="12" class="img-left">
+            <img src="../assets/Index/col/5.png" />
+          </van-col>
+          <van-col span="12" class="img-right">
+            <img src="../assets/Index/col/6.png" />
+          </van-col>
+          <van-col span="12" class="img-left">
+            <img src="../assets/Index/col/7.png" />
+          </van-col>
+          <van-col span="12" class="img-right">
+            <img src="../assets/Index/col/8.png" />
+          </van-col>
+          <van-col span="12" class="img-left">
+            <img src="../assets/Index/col/9.png" />
+          </van-col>
+          <van-col span="12" class="img-right">
+            <img src="../assets/Index/col/10.png" />
+          </van-col>
         </van-row>
       </div>
     </transition>
@@ -139,6 +175,14 @@ export default {
     close() {
       this.showMsgCode = false;
     },
+    //特权列表显示按钮
+    privilegeShow() {
+      this.showPrivilege = true;
+    },
+    //特权列表关闭按钮
+    privilegeClose() {
+      this.showPrivilege = false;
+    },
     //我的订单按钮事件
     getOrder() {
       this.$router.push("/myOrder");
@@ -210,16 +254,17 @@ export default {
     },
     //支付按钮
     pay() {
-      if (!this.clickFlag) {
-        alert(this.errMsg);
-        return;
-      }
-      if (this.$store.state.login.islogin) {
-        this.showMsgCode = true;
-      } else {
-        alert("未获取到授权，请退出后重新登录");
-        return;
-      }
+      this.showMsgCode = true;
+      // if (!this.clickFlag) {
+      //   alert(this.errMsg);
+      //   return;
+      // }
+      // if (this.$store.state.login.islogin) {
+      //   this.showMsgCode = true;
+      // } else {
+      //   alert("未获取到授权，请退出后重新登录");
+      //   return;
+      // }
     },
     msgPay() {
       if (!mobileCheck(this.mobile.trim())) {
@@ -310,6 +355,34 @@ export default {
     width: 66vw;
     color: #ffffff;
     text-align: center;
+  }
+  .toast {
+    overflow-y: scroll;
+    background-color: rgba(0, 0, 0, 0.7);
+    .toastFoot {
+      img {
+        width: 100%;
+        height: auto;
+      }
+    }
+
+    .img-left {
+      text-align: right;
+    }
+    .img-right {
+      text-align: left;
+    }
+    img {
+      width: 80%;
+      height: auto;
+    }
+    .closeBtn {
+      position: absolute;
+      top: 5vw;
+      right: 5vw;
+      width: 6vw;
+      height: auto;
+    }
   }
 }
 </style>

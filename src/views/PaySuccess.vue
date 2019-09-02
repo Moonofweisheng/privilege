@@ -1,44 +1,24 @@
 <template>
   <div class="main">
-    <div class="main-head">
-      <img src="../assets/PaySuccess/pay1.jpg" />
-    </div>
-    <!-- <img id="barcode" /> -->
     <div class="main-mid">
-      <div class="main-mid-item">
-        <img class="main-mid-item-mongolia" src="../assets/PaySuccess/mongolia.png" />
-        <div class="main-mid-item-left">
-          <img src="../assets/PaySuccess/coupon1.png" />
-        </div>
-        <div class="main-mid-item-right">
-          <span style="font-size:4.5vw">罗莱&内野 TW378</span>
-          <span style="font-size:3.4vw">越南进口云朵方面浴套装兑换券</span>
-          <span style="font-size:4vw">兑换码：9888882234448</span>
-          <img id="code1" />
-        </div>
+      <img src="../assets/PaySuccess/paybg.png" />
+      <div class="main-mid-coupon">
+        <div class="round" id="left"></div>
+        <div class="round" id="right"></div>
+        <span style="font-size: 4vw; display: block;">乳胶枕兑换券码</span>
+        <span style="font-size: 3.5vw; display: block;">(K3码111901200004000XX)</span>
+        <span style="font-size: 3.5vw; display: block;">XXXXXXXXX</span>
       </div>
-      <div class="main-mid-item" style="margin-top:5vw">
-        <img class="main-mid-item-mongolia" src="../assets/PaySuccess/mongolia.png" />
-        <div class="main-mid-item-left">
-          <img src="../assets/PaySuccess/coupon2.png" />
-        </div>
-        <div class="main-mid-item-right">
-          <span style="font-size:4.5vw;">99元现金抵用券</span>
-          <span style="font-size:4vw">兑换码：9888882234448</span>
-          <img id="code2" height="10vw" />
-        </div>
+      <div class="main-mid-add">
+        <span style=" display: block;width:55vw">活动门店：XXX罗莱家纺</span>
+        <span style=" display: block;width:55vw">地址：XX省XX市XX区XX号</span>
+        <span style=" display: block;width:55vw">联系方式：11111111111</span>
       </div>
-    </div>
-    <div class="main-foot">
-      <span>请截图保存兑换码</span>
-      <van-button @click="back()" type="primary" color="#03a9a5">返回首页</van-button>
     </div>
   </div>
 </template>
 <script>
-import JsBarcode from "jsbarcode";
 import { Button } from "vant";
-
 export default {
   name: "PaySuccess",
   components: {
@@ -51,16 +31,7 @@ export default {
   },
   created() {},
   computed: {},
-  mounted() {
-    JsBarcode("#code1", "2222232342323423", {
-      format: "CODE128", //选择要使用的条形码类型
-      displayValue: false //是否在条形码下方显示文字
-    });
-    JsBarcode("#code2", "2222232342323423", {
-      format: "CODE128", //选择要使用的条形码类型
-      displayValue: false //是否在条形码下方显示文字
-    });
-  },
+  mounted() {},
   methods: {
     back() {
       this.$router.push("/");
@@ -70,74 +41,65 @@ export default {
 </script>
 <style lang="less" scoped>
 @import "../util/css/ModifyVantStyle/Button";
+@main-bgcolor: #98181f;
 .main {
-  min-height: 100vh;
   width: 100vw;
+  min-height: 100vh;
   height: auto;
-  background-color: #851b29;
-  &-head {
+  background-color: @main-bgcolor;
+  background-image: url("../assets/Index/bg.png");
+  background-size: 100vw auto;
+  background-repeat: no-repeat;
+  &-mid {
+    .flex(column, center);
+    width: 100vw;
+    min-height: 100vh;
+    height: auto;
+    background: rgba(130, 0, 0, 0.7);
     img {
-      width: 100%;
+      display: block;
+      width: 80%;
+      margin-left: 10%;
       height: auto;
     }
-  }
-  &-mid {
-    &-item {
-      position: relative;
-      width: 90vw;
-      height: 36vw;
-      margin: 0 auto;
-      border-left: 1px solid #d68b97;
-      border-top: 1px solid #d68b97;
-      border-bottom: #6c1621;
-      border-right: #6c1621;
-      border-radius: 3vw;
-      box-shadow: #6c1621 1.4vw 1.4vw;
-      .flex(row, center);
-      &-mongolia {
+    &-coupon {
+      position: absolute;
+      top: 30vh;
+      left: 20vw;
+      width: 60vw;
+      height: 20vw;
+      border: 1px solid #98181f;
+      border-radius: 2vw;
+      background: #e2bd7b;
+      text-align: center;
+      color: #ac1717;
+      .flex(column, space-around);
+      .round {
+        top: 7vw;
         position: absolute;
-        border-radius: 3vw;
-        left: 0;
-        top: 0;
-        width: 65%;
-        height: 100%;
+        height: 6vw;
+        width: 3vw;
+        background: #ddc193;
+        border: 1px solid #98181f;
       }
-      &-left {
-        width: 44%;
-        height: 100%;
-        .flex(column, center);
-        img {
-          width: 80%;
-          margin-left: 10%;
-          height: auto;
-        }
+      #left {
+        left: -2px;
+        border-left: 1px solid #ddc193;
+        border-radius: 0vw 3vw 3vw 0vw;
       }
-      &-right {
-        flex: 1;
-        height: 100%;
-        text-align: center;
-        .flex(column, space-around);
-        img {
-          width: 70%;
-          height: 13vw;
-          margin-left: 15%;
-        }
-        span {
-          color: #ffffff;
-          display: block;
-          width: 100%;
-        }
+      #right {
+        right: -2px;
+        border-right: 1px solid #ddc193;
+        border-radius: 3vw 0vw 0vw 3vw;
       }
     }
-  }
-  &-foot {
-    padding: 5vw 0;
-    text-align: center;
-    span {
-      color: #ffffff;
+    &-add {
+      color: #6d3612;
+      position: absolute;
+      left: 20vw;
+      width: 60vw;
+      overflow: hidden;
       font-size: 4vw;
-      display: block;
-      margin-bottom: 5vw;
     }
   }
 }

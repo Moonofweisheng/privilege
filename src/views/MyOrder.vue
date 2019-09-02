@@ -17,20 +17,8 @@
           <img id="code1" />
         </div>
       </div>
-      <div class="main-mid-item" style="margin-top:5vw">
-        <img class="main-mid-item-mongolia" src="../assets/PaySuccess/mongolia.png" />
-        <div class="main-mid-item-left">
-          <img src="../assets/PaySuccess/coupon2.png" />
-        </div>
-        <div class="main-mid-item-right">
-          <span style="font-size:4.5vw;">99元现金抵用券</span>
-          <span style="font-size:4vw;margin-top:-4vw">兑换码：{{code2}}</span>
-          <img id="code2" height="10vw" />
-        </div>
-      </div>
     </div>
     <div class="main-foot">
-      <span>请截图保存兑换码</span>
       <van-button @click="back()" type="primary" color="#03a9a5">返回首页</van-button>
     </div>
   </div>
@@ -95,6 +83,7 @@ export default {
   width: 100vw;
   height: auto;
   background-color: #851b29;
+  .flex(column, space-around);
   &-head {
     img {
       width: 100%;

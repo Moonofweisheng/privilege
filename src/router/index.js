@@ -29,7 +29,7 @@ export default new Router({
       component: () =>
         import("../views/PaySuccess.vue"),
       meta: {
-        title: "罗莱婚博会"
+        title: "支付成功"
       }
     }, {
       path: "/myOrder",
@@ -37,7 +37,7 @@ export default new Router({
       component: () =>
         import("../views/MyOrder.vue"),
       meta: {
-        title: "罗莱婚博会"
+        title: "我的订单"
       }
     }, {
       path: "/shopList",
@@ -47,7 +47,23 @@ export default new Router({
       meta: {
         title: "罗莱婚博会"
       }
-    }
+    },
+    {
+      path: "/login",
+      name: "login",
+      component: () => import('../views/Login.vue'),
+      meta: {
+        title: "登录"
+      }
+    },
+    {
+      path: "/register",
+      name: "register",
+      component: () => import('../views/Register.vue'),
+      meta: {
+        title: "完善个人信息"
+      }
+    },
   ]
 });
 
