@@ -6,7 +6,7 @@ const getters = {
 }
 
 const mutations = {
-    updateShopCode(state, click) {
+    updateClick(state, click) {
         [state.clickFlag, state.clickMsg]
             =
             [click.clickFlag, click.clickMsg]

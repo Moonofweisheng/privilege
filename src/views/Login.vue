@@ -12,6 +12,7 @@
           size="small"
           type="primary"
           @click="sendMsg()"
+          color="#cc9966"
           :disabled="showCode"
           :class="{ 'mid-btn--disabled': showCode,'mid-btn--abled':!showCode }"
         >{{textMsg}}</van-button>
@@ -24,6 +25,7 @@
         @click="nextStep()"
         :loading="nextBtnLoading"
         loading-text="加载中..."
+        color="#cc9966"
       >下一步</van-button>
     </div>
   </div>
@@ -56,7 +58,10 @@ export default {
     };
   },
   computed: {},
-  created() {},
+  created() {
+    this.msg = this.$store.state.login.msg;
+    this.mobile = this.$store.state.login.mobile;
+  },
   methods: {
     //下一步
     nextStep() {
@@ -71,25 +76,13 @@ export default {
         alert("请输入验证码");
         return;
       }
-      this.$store.commit("login/mobile", this.mobile);
+      let mobileObj = {
+        mobile: this.mobile,
+        msg: this.msg
+      };
+      this.$store.commit("login/updateMobile", mobileObj);
       this.nextBtnLoading = true;
-      this.$api
-        .judgeMember(this.mobile, this.msg)
-        .then(result => {
-          this.nextBtnLoading = false;
-          if (result.data.errcode == "0") {
-            this.$router.push("/register");
-          } else if (result.data.errcode == "1") {
-            alert(result.data.errmsg);
-          } else if (result.data.errcode == "2") {
-            alert(result.data.errmsg);
-          } else {
-            alert("未知错误");
-          }
-        })
-        .catch(error => {
-          this.nextBtnLoading = false;
-        });
+      this.$router.push("/register");
     },
     //验证码发送按钮事件
     sendMsg() {

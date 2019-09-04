@@ -11,7 +11,7 @@ export function getCode(url) {
             if (strs[i].split("=")[0] == "code") {
                 parm.code = strs[i].split("=")[1];
             } else if (strs[i].split("=")[0] == "state") {
-                parm.shopCode = strs[i].split("=")[1];
+                parm.userCode = strs[i].split("=")[1];
             }
         }
     }

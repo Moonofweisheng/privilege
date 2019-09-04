@@ -22,6 +22,7 @@
         @click="submit()"
         :loading="submitLoading"
         loading-text="提交中..."
+        color="#cc9966"
       >提交</van-button>
     </div>
     <van-popup v-model="dateShow" position="bottom">
@@ -89,17 +90,12 @@ export default {
       this.submitLoading = true;
 
       this.$api
-        .addMember(
-          this.name,
-          this.$store.state.login.mobile,
-          this.birthday,
-          this.gender
-        )
+        .addMember(this.name, this.birthday, this.gender)
         .then(result => {
           console.log(result);
           this.submitLoading = false;
           if (result.data.errcode == "0") {
-            this.$router.push("/success");
+            this.$router.push("/");
           } else if (result.data.errcode == "1") {
             alert(result.data.errmsg);
           } else {

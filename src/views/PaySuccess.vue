@@ -2,39 +2,67 @@
   <div class="main">
     <div class="main-mid">
       <img src="../assets/PaySuccess/paybg.png" />
-      <div class="main-mid-coupon">
-        <div class="round" id="left"></div>
-        <div class="round" id="right"></div>
-        <span style="font-size: 4vw; display: block;">乳胶枕兑换券码</span>
-        <span style="font-size: 3.5vw; display: block;">(K3码111901200004000XX)</span>
-        <span style="font-size: 3.5vw; display: block;">XXXXXXXXX</span>
-      </div>
-      <div class="main-mid-add">
-        <span style=" display: block;width:55vw">活动门店：XXX罗莱家纺</span>
-        <span style=" display: block;width:55vw">地址：XX省XX市XX区XX号</span>
-        <span style=" display: block;width:55vw">联系方式：11111111111</span>
+      <div style="position:absolute; top: 30vh;left: 20vw;">
+        <div class="main-mid-coupon">
+          <div class="round" id="left"></div>
+          <div class="round" id="right"></div>
+          <span style="font-size: 4vw; display: block;">99元特权卡兑换券</span>
+          <span style="font-size: 4vw; display: block;">{{code}}</span>
+        </div>
+        <div class="main-mid-add">
+          <span style=" display: block;width:55vw">活动门店：{{shopName}}</span>
+          <span style=" display: block;width:55vw">地址：{{shopAddress}}</span>
+          <span style=" display: block;width:55vw">联系方式：{{shopTel}}</span>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { Button } from "vant";
+import { Toast } from "vant";
 export default {
   name: "PaySuccess",
   components: {
-    [Button.name]: Button
+    [Toast.name]: Toast
   },
   data() {
     return {
-      type: ""
+      code: "暂无信息", //券号
+      shopAddress: "暂无信息", //门店地址
+      shopName: "暂无信息", //门店名称
+      shopTel: "暂无信息" //门店联系方式
     };
   },
-  created() {},
+  created() {
+    Toast.loading({
+      mask: true,
+      duration: 0,
+      forbidClick: true,
+      message: "加载中..."
+    });
+    this.$api
+      .orderList()
+      .then(result => {
+        Toast.clear();
+        if (result.data.errcode == "0") {
+          [this.code, this.shopAddress, this.shopName, this.shopTel] = [
+            result.data.orderList[0].ticketCode,
+            result.data.orderList[0].shopAddress,
+            result.data.orderList[0].shopName,
+            result.data.orderList[0].shopTel
+          ];
+          console.log(result.data);
+        }
+      })
+      .catch(err => {
+        Toast.clear();
+      });
+  },
   computed: {},
   mounted() {},
   methods: {
     back() {
-      this.$router.push("/");
+      this.$router.go(-1);
     }
   }
 };
@@ -63,9 +91,7 @@ export default {
       height: auto;
     }
     &-coupon {
-      position: absolute;
-      top: 30vh;
-      left: 20vw;
+      position: relative;
       width: 60vw;
       height: 20vw;
       border: 1px solid #98181f;
@@ -95,9 +121,9 @@ export default {
     }
     &-add {
       color: #6d3612;
-      position: absolute;
-      left: 20vw;
+      position: relative;
       width: 60vw;
+      margin-top: 5vw;
       overflow: hidden;
       font-size: 4vw;
     }

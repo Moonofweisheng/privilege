@@ -5,6 +5,8 @@ const state = {
     openid: '',//用户openid
     islogin: false,//是否登录
     mobile: '',//用户联系方式
+    msg: "",//验证码
+    userCode: '',//导购code
     shopCode: ''//门店编号
 }
 const getters = {
@@ -17,10 +19,10 @@ const mutations = {
     /**
     * 更新门店编号
     * @param {*} state 
-    * @param {*} shopCode 
+    * @param {*} userCode 
     */
-    updateShopCode(state, shopCode) {
-        state.shopCode = shopCode
+    updateUserCode(state, userCode) {
+        state.userCode = userCode
     },
     /**
      * 更新ip地址
@@ -36,12 +38,12 @@ const mutations = {
      * @param {*} login 
      */
     login(state, login) {
-        [state.os, state.token, state.openid, state.islogin]
+        [state.os, state.token, state.openid, state.shopCode, state.islogin]
             =
-            [login.os, login.token, login.openid, login.islogin]
+            [login.os, login.token, login.openid, login.shopCode, login.islogin]
     },
-    mobile(state, mobile) {
-        state.mobile = mobile
+    updateMobile(state, mobileObj) {
+        [state.mobile, state.msg] = [mobileObj.mobile, mobileObj.msg]
     }
 }
 const actions = {

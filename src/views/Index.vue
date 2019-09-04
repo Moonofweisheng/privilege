@@ -1,6 +1,8 @@
 <template>
   <div class="main">
     <div class="main-head"></div>
+    <div class="myPrize" @click="getOrder()">我的奖品</div>
+    <img src="../assets/Index/gift.png" class="gift" />
     <div class="main-mid">
       <img src="../assets/Index/main1.png" />
       <img
@@ -15,6 +17,9 @@
       />
       <img src="../assets/Index/main-help.png" />
     </div>
+    <div class="main-foot"></div>
+    <img src="../assets/Index/huabian.png" class="huabian" />
+
     <!-- 登录开始 -->
     <transition name="bounce">
       <div class="toast" v-if="showMsgCode">
@@ -100,7 +105,7 @@ import { mobileCheck } from "../util/js/check";
 import { getCode } from "../util/js/getParam";
 import { getOsVersion } from "../util/js/device";
 import { rollBug } from "../util/js/iosRollBug";
-import { mapState } from "vuex";
+import { getWxCallbackParams } from "../util/js/jsApi";
 import wx from "weixin-js-sdk";
 export default {
   name: "Index",
@@ -124,46 +129,57 @@ export default {
     };
   },
   created() {
-    // this.clickFlag = this.$store.state.clickAble.clickFlag;
-    // this.errMsg = this.$store.state.clickAble.clickMsg;
-    // let parm = getCode(location.search);
-    // if (!this.$store.state.login.islogin) {
-    //   this.$store.commit("login/updateShopCode", parm.shopCode);
-    //   Toast.loading({
-    //     mask: true,
-    //     duration: 0,
-    //     forbidClick: true,
-    //     message: "努力授权中..."
-    //   });
-    //   this.$api
-    //     .wxAuthLogin(parm.code, parm.shopCode, getOsVersion())
-    //     .then(result => {
-    //       if (result.data.errcode == "0") {
-    //         let login = {
-    //           os: getOsVersion(),
-    //           token: result.data.token,
-    //           openid: result.data.openid,
-    //           islogin: true
-    //         };
-    //         this.$store.commit("login/login", login);
-    //         if (result.data.purchased == "1") {
-    //           this.errMsg = result.data.errmsg;
-    //           this.clickFlag = false;
-    //         }
-    //         Toast.clear();
-    //       } else {
-    //         alert(result.data.errmsg);
-    //         this.errMsg = result.data.errmsg;
-    //         this.clickFlag = false;
-    //         Toast.clear();
-    //       }
-    //       let click = {
-    //         clickFlag: this.clickFlag,
-    //         clickMsg: this.errMsg
-    //       };
-    //       this.$store.commit("clickAble/updateShopCode", click);
-    //     });
-    // }
+    this.mobile = this.$store.state.login.mobile;
+    this.msg = this.$store.state.login.msg;
+    this.clickFlag = this.$store.state.clickAble.clickFlag;
+    this.errMsg = this.$store.state.clickAble.clickMsg;
+    let parm = getCode(location.search);
+    getWxCallbackParams(
+      window.location.href,
+      getOsVersion(),
+      this.$store.state.login.ip,
+      parm.userCode
+    );
+    if (!this.$store.state.login.islogin) {
+      this.$store.commit("login/updateUserCode", parm.userCode);
+      Toast.loading({
+        mask: true,
+        duration: 0,
+        forbidClick: true,
+        message: "努力授权中..."
+      });
+      this.$api
+        .wxAuthLogin(parm.code, parm.userCode, getOsVersion())
+        .then(result => {
+          if (result.data.errcode == "0") {
+            let login = {
+              os: getOsVersion(),
+              token: result.data.token,
+              openid: result.data.openid,
+              shopCode: result.data.shopCode,
+              islogin: true
+            };
+            this.$store.commit("login/login", login);
+            if (result.data.purchased == "1") {
+              this.errMsg = result.data.errmsg;
+              this.clickFlag = false;
+            }
+          } else {
+            alert(result.data.errmsg);
+            this.errMsg = result.data.errmsg;
+            this.clickFlag = false;
+          }
+          Toast.clear();
+          let click = {
+            clickFlag: this.clickFlag,
+            clickMsg: this.errMsg
+          };
+          this.$store.commit("clickAble/updateClick", click);
+        })
+        .catch(error => {
+          Toast.clear();
+        });
+    }
   },
   computed: {},
   methods: {
@@ -185,7 +201,7 @@ export default {
     },
     //我的订单按钮事件
     getOrder() {
-      this.$router.push("/myOrder");
+      this.$router.push("/paySuccess");
     },
     //获取参与的门店按钮事件
     getShop() {
@@ -239,32 +255,55 @@ export default {
         },
         res => {
           if (res.err_msg == "get_brand_wcpay_request:ok") {
-            // 使用以上方式判断前端返回,微信团队郑重提示：
-            //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
             this.clickFlag = false;
             this.errMsg = "您已经购买过！";
             let click = {
               clickFlag: false,
               clickMsg: "您已经购买过！"
             };
-            this.$store.commit("clickAble/updateShopCode", click);
+
+            this.$store.commit("clickAble/updateClick", click);
+            Toast.loading({
+              mask: true,
+              duration: 0,
+              forbidClick: true,
+              message: "加载中..."
+            });
+            let timer = setInterval(() => {
+              this.$api
+                .orderList()
+                .then(result => {
+                  if (
+                    result.data.errcode == "0" &&
+                    result.data.orderList.length == "1"
+                  ) {
+                    Toast.clear();
+                    this.$router.push("/paySuccess");
+                  }
+                })
+                .catch(err => {
+                  Toast.clear();
+                });
+            }, 1000);
+            this.$once("hook:beforeDestroy", () => {
+              clearInterval(timer);
+            });
           }
         }
       );
     },
     //支付按钮
     pay() {
-      this.showMsgCode = true;
-      // if (!this.clickFlag) {
-      //   alert(this.errMsg);
-      //   return;
-      // }
-      // if (this.$store.state.login.islogin) {
-      //   this.showMsgCode = true;
-      // } else {
-      //   alert("未获取到授权，请退出后重新登录");
-      //   return;
-      // }
+      if (!this.clickFlag) {
+        alert(this.errMsg);
+        return;
+      }
+      if (this.$store.state.login.islogin) {
+        this.showMsgCode = true;
+      } else {
+        alert("未获取到授权，请退出后重新登录");
+        return;
+      }
     },
     msgPay() {
       if (!mobileCheck(this.mobile.trim())) {
@@ -299,9 +338,18 @@ export default {
             signType,
             sign
           );
-        } else {
+        } else if (result.data.errcode == "1") {
           alert(result.data.errmsg);
           return;
+        } else if (result.data.errcode == "2") {
+          let mobileObj = {
+            mobile: this.mobile,
+            msg: this.msg
+          };
+          this.$store.commit("login/updateMobile", mobileObj);
+          this.$router.push("/login");
+        } else {
+          alert("未知错误");
         }
       });
     }
@@ -327,13 +375,13 @@ export default {
   width: 100vw;
   min-height: 100vh;
   height: auto;
+  position: relative;
   background-color: @main-bgcolor;
   background-image: url("../assets/Index/bg.png");
   background-size: 100vw auto;
   background-repeat: no-repeat;
-  .flex(column, space-around);
   &-head {
-    height: 30vw;
+    height: 70vw;
   }
   &-mid {
     width: 80vw;
@@ -347,6 +395,9 @@ export default {
       width: 100%;
       height: auto;
     }
+  }
+  &-foot {
+    height: 15vw;
   }
   .mid-span {
     font-size: 3vw;
@@ -373,7 +424,7 @@ export default {
       text-align: left;
     }
     img {
-      width: 80%;
+      width: 70%;
       height: auto;
     }
     .closeBtn {
@@ -383,6 +434,35 @@ export default {
       width: 6vw;
       height: auto;
     }
+  }
+  .myPrize {
+    position: fixed;
+    z-index: 20;
+    top: 15vw;
+    right: 0vw;
+    width: 20vw;
+    height: 8vw;
+    border-radius: 90px 0 0 90px;
+    text-align: center;
+    line-height: 8vw;
+    color: white;
+    font-size: 3.7vw;
+    background: #62aba2;
+  }
+  .gift {
+    position: absolute;
+    z-index: 20;
+    top: 50vw;
+    left: 5vw;
+    width: 30vw;
+    height: auto;
+  }
+  .huabian {
+    position: absolute;
+    z-index: 1;
+    bottom: 0;
+    width: 100vw;
+    height: auto;
   }
 }
 </style>

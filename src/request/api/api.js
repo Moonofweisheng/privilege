@@ -3,7 +3,7 @@ import instance from '../http/http' //导入http中创建的axios实例
 import store from '../../store/index' //导入store
 import qs from 'qs'
 
-let url = base.pe
+let url = base.he
 
 const api = {
     /**
@@ -11,13 +11,13 @@ const api = {
      * @param {String} code 
      * @param {String} type 
      */
-    wxAuthLogin(code, shopCode, os) {
+    wxAuthLogin(code, userCode, os) {
         return instance({
             url: url + 'wechatAuthLogin.do',
             data: qs.stringify({
                 code: code,
-                type: 18,
-                shopCode: shopCode,
+                type: 19,
+                userCode: userCode,
                 ip: store.state.login.ip,
                 os: os
             }),
@@ -34,7 +34,7 @@ const api = {
             url: "https://interface1.luolai.tech/activity/sendMsgcode.do",
             data: qs.stringify({
                 mobile: mobile,
-                type: 18,
+                type: 19,
                 ip: store.state.login.ip,
                 os: store.state.login.os
             }),
@@ -53,7 +53,7 @@ const api = {
             },
             data: {
                 ip: store.state.login.ip,          //用户IP
-                type: 18,
+                type: 19,
                 openid: store.state.login.openid,
                 mobile: mobile,
                 msgcode: msgcode,
@@ -68,7 +68,7 @@ const api = {
         return instance({
             url: url + "getActivityShops.do",
             data: qs.stringify({
-                type: 18,
+                type: 19,
             }),
             method: "post"
         })
@@ -81,11 +81,37 @@ const api = {
             url: url + "orderList.do",
             method: "post",
             data: qs.stringify({
-                type: 18,
+                type: 19,
                 openid: store.state.login.openid
             })
         })
-    }
+    },
+    /**
+    * 注册会员
+    * @param {*} fullName 
+    * @param {*} mobileNum 
+    * @param {*} birthday 
+    * @param {*} gender 
+    */
+    addMember(fullName, birthday, gender) {
+        return instance({
+            url: url + 'addMember.do',
+            data: qs.stringify({
+                type: 19,
+                extSysId: "HD",
+                fullName: fullName,
+                brandId: "11",
+                mobileNum: store.state.login.mobile,
+                birthday: birthday,
+                gender: gender,
+                svUnitCode: store.state.login.shopCode, //门店编号
+                ip: store.state.login.ip,
+                os: store.state.login.os,
+                openid: store.state.login.openid
+            }),
+            method: 'post'
+        })
+    },
 }
 
 export default api

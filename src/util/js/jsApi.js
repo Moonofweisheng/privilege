@@ -2,17 +2,16 @@ import wx from 'weixin-js-sdk'
 import axios from 'axios'
 import qs from 'qs'
 
-export function getWxCallbackParams(url, os, ip, shopCode) {
+export function getWxCallbackParams(url, os, ip, userCode) {
     axios({
         method: 'post',
-        url: 'http://2n4a616392.qicp.vip:55312/interface/scratchCard/getWxCallbackParams.do',
+        url: 'https://interface1.luolai.tech/scratchCard/getWxCallbackParams.do',
         data: qs.stringify({
             tokenUrl: url,
             ip: ip,
             os: os
         })
     }).then((result) => {
-
         if (result.data.errcode == "0") {
             // alert(result.data.errcode);
             wx.config({
@@ -31,18 +30,19 @@ export function getWxCallbackParams(url, os, ip, shopCode) {
             wx.ready(function () {   //需在用户可能点击分享按钮前就先调用
                 // alert('进入ready');
                 wx.updateAppMessageShareData({
-                    "title": '喜“狮”到  刮奖活动', // 分享标题
-                    "desc": '立即参与有机会刮取零售价1998元罗莱 玻尿酸蚕丝乳胶枕1对（颜色随机）', // 分享描述
-                    "link": 'http://static.luolai.cn/activity/scratch/#/jump/' + shopCode, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                    'imgUrl': 'http://static.luolai.cn/activity/scratch/ac.jpg', // 分享图标
+                    "title": '罗莱99元特权卡', // 分享标题
+                    "desc": '购99元特权卡，尊享十大特权', // 分享描述
+                    "link": 'http://static.luolai.cn/activity/privilege/#/jump/' + userCode, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                    'imgUrl': 'http://static.luolai.cn/activity/privilege/ac.png', // 分享图标
                     success: function () {
                         // alert('成功了');
                     }
                 })
                 wx.updateTimelineShareData({
-                    "title": '喜“狮”到  刮奖活动', // 分享标题
-                    "link": 'http://static.luolai.cn/activity/scratch/#/jump/' + shopCode, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                    "imgUrl": 'http://static.luolai.cn/activity/scratch/ac.jpg', // 分享图标
+                    "title": '罗莱99元特权卡', // 分享标题
+                    "desc": '购99元特权卡，尊享十大特权', // 分享描述
+                    "link": 'http://static.luolai.cn/activity/privilege/#/jump/' + userCode, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                    'imgUrl': 'http://static.luolai.cn/activity/privilege/ac.png', // 分享图标
                     success: function () {
                         // 设置成功
                     }

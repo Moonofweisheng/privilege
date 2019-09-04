@@ -12,15 +12,16 @@ export default new Router({
       component: () =>
         import("../views/Index.vue"),
       meta: {
-        title: "罗莱婚博会"
+        title: "罗莱婚博会",
+        keepAlive: true
       }
     },
     {
-      path: '/jump/:shopCode',
+      path: '/jump/:userCode',
       name: 'jump',
       component: () => import('../views/Jump.vue'),
       meta: {
-        title: "罗莱婚博会"
+        title: "罗莱婚博会",
       }
     },
     {
@@ -29,7 +30,9 @@ export default new Router({
       component: () =>
         import("../views/PaySuccess.vue"),
       meta: {
-        title: "支付成功"
+        title: "支付成功",
+        keepAlive: true
+
       }
     }, {
       path: "/myOrder",
@@ -39,21 +42,14 @@ export default new Router({
       meta: {
         title: "我的订单"
       }
-    }, {
-      path: "/shopList",
-      name: "shopList",
-      component: () =>
-        import("../views/ShopList.vue"),
-      meta: {
-        title: "罗莱婚博会"
-      }
     },
     {
       path: "/login",
       name: "login",
       component: () => import('../views/Login.vue'),
       meta: {
-        title: "登录"
+        title: "登录",
+        keepAlive: true
       }
     },
     {
@@ -61,7 +57,9 @@ export default new Router({
       name: "register",
       component: () => import('../views/Register.vue'),
       meta: {
-        title: "完善个人信息"
+        title: "完善个人信息",
+        keepAlive: true
+
       }
     },
   ]

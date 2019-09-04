@@ -11,8 +11,7 @@
           <img src="../assets/PaySuccess/coupon1.png" />
         </div>
         <div class="main-mid-item-right">
-          <span style="font-size:4.5vw">罗莱&内野 TW378</span>
-          <span style="font-size:3.4vw;margin-top:-2vw">越南进口云朵方面浴套装兑换券</span>
+          <span style="font-size:4vw;">99元特权卡兑换券</span>
           <span style="font-size:4vw">兑换码：{{code1}}</span>
           <img id="code1" />
         </div>
@@ -33,8 +32,7 @@ export default {
   },
   data() {
     return {
-      code1: "暂无",
-      code2: "暂无"
+      code1: "暂无"
     };
   },
   created() {},
