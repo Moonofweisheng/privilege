@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="main-head"></div>
-    <div class="myPrize" @click="getOrder()">我的奖品</div>
+    <div class="myPrize" @click="getOrder()">我的订单</div>
     <img src="../assets/Index/gift.png" class="gift" />
     <div class="main-mid">
       <img src="../assets/Index/main1.png" />
@@ -49,7 +49,6 @@
             @click="sendMsg()"
           >{{textMsg}}</button>
           <img src="../assets/msgToast/btn2.png" class="toastBtn" @click="msgPay()" />
-          <div class="mid-span">支付成功后，请务必将卡券添加至[微信卡包]</div>
         </main>
         <footer class="toastFoot">
           <img src="../assets/msgToast/headBottom.png" />
@@ -175,6 +174,13 @@ export default {
             clickMsg: this.errMsg
           };
           this.$store.commit("clickAble/updateClick", click);
+          if (this.$store.state.login.cardShow) {
+            this.showPrivilege = true;
+            setTimeout(() => {
+              this.showPrivilege = false;
+            }, 3000);
+            this.$store.commit("login/updateCardShow", false);
+          }
         })
         .catch(error => {
           Toast.clear();

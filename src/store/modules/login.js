@@ -7,7 +7,8 @@ const state = {
     mobile: '',//用户联系方式
     msg: "",//验证码
     userCode: '',//导购code
-    shopCode: ''//门店编号
+    shopCode: '',//门店编号
+    cardShow: true //特权卡是否加载时显示
 }
 const getters = {
 
@@ -44,6 +45,9 @@ const mutations = {
     },
     updateMobile(state, mobileObj) {
         [state.mobile, state.msg] = [mobileObj.mobile, mobileObj.msg]
+    },
+    updateCardShow(state, cardShow) {
+        state.cardShow = cardShow
     }
 }
 const actions = {

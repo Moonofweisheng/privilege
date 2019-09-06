@@ -12,7 +12,7 @@ export default new Router({
       component: () =>
         import("../views/Index.vue"),
       meta: {
-        title: "罗莱婚博会",
+        title: "罗莱99元特权卡",
         keepAlive: true
       }
     },
@@ -21,7 +21,7 @@ export default new Router({
       name: 'jump',
       component: () => import('../views/Jump.vue'),
       meta: {
-        title: "罗莱婚博会",
+        title: "罗莱99元特权卡",
       }
     },
     {
